@@ -5,14 +5,14 @@ import argparse
 parser = argparse.ArgumentParser(
                     prog='gendata.py',
                     description='Generate random data for combinatorics project')
-parser.add_argument('students', metavar='STUDENTS', type=int,
-                    help='number of students')
-parser.add_argument('classes', metavar='CLASSES', type=int,
-                    help='number of classes')
-parser.add_argument('ccapacity', metavar='ClASS_CAPACITY', type=int,
-                    help='number of students a class can fit')
-parser.add_argument('--scapacity', metavar='STUDENT_CAPACTIY', type=int,
+parser.add_argument('--stud', metavar='STUDENTS', type=int,
+                    dest='students', action='store', default=5)
+parser.add_argument('--class', metavar='CLASSES', type=int,
+                    dest='classes', action='store', default=5)
+parser.add_argument('--stud_cap', metavar='STUDENT_CAPACTIY', type=int,
                     dest='scapacity', action='store', default=5)
+parser.add_argument('--class_cap', metavar='ClASS_CAPACITY', type=int,
+                    dest='ccapacity', action='store', default=1)
 args = parser.parse_args()
 
 # Students can pick at most 5 classes
@@ -28,7 +28,7 @@ for i in range(args.students+1, args.students+args.classes+1):
     cap[i][-1] = args.ccapacity
 
 for s in range(args.students):
-    rankings = random.sample(range(args.classes), 5)
+    rankings = random.sample(range(args.classes), args.scapacity)
     for i, r in enumerate(rankings):
         costs[1+s][1+args.students+r] = i+1
         cap[1+s][1+args.students+r] = 1

@@ -5,6 +5,8 @@
 #include <string>
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/time.h>
+#include "mcmf.hpp"
 
 int main(int argc, char** argv){
 	if(argc < 2){
@@ -43,11 +45,37 @@ int main(int argc, char** argv){
 		cap.push_back(temp_cap);
 	}
 
-	for(int i = 0; i < cap.size(); i++){
-		for(int j = 0; j < cap[i].size(); j++){
-			printf("%i,", cap[i][j]);
-		}
-		printf("\n");
-	}
+    printf("\n--------INPUTS--------\n");	
+	MinCostMaxFlow mcmf = MinCostMaxFlow(cap, cost);
+
+    if(cap.size() < 10) {
+        printf("\nCapacity Matrix:\n");	
+        for(int i = 0; i < cap.size(); i++){
+            for(int j = 0; j < cap[i].size(); j++){
+                printf("%i ", cap[i][j]);
+            }
+            printf("\n");
+        }
+
+        printf("\nSatisfaction Matrix:\n");	
+        for(int i = 0; i < cost.size(); i++){
+            for(int j = 0; j < cost[i].size(); j++){
+                printf("%i ", cost[i][j]);
+            }
+            printf("\n");
+        }
+    }
+
+	printf("\nCalculating flow...\n");	
+	struct timeval stop, start;
+	gettimeofday(&start, NULL);
+	int t1 = time(0);
+
+	mcmf.computeMaxFlow(0, cap.size()-1);
+
+	gettimeofday(&stop, NULL);
+
+	mcmf.printResults();
+	printf("Execution time:     %lu ms\n", ((stop.tv_sec - start.tv_sec) * 1000000 + stop.tv_usec - start.tv_usec) / 1000);
 	return 0;
 }
