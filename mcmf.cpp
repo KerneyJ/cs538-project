@@ -1,39 +1,28 @@
-#include "mcmf.hpp"; 
+#include <iostream>
+#include "mcmf.hpp"
 
-//     // Driver Code
-//     public static void main(String args[])
-//     {
- 
-//         // Creating an object flow
-//         MinCostMaxFlow flow = new MinCostMaxFlow();
- 
-//         int s = 0, t = 4;
- 
-//         int cap[][] = { { 0, 3, 1, 0, 3 },
-//                         { 0, 0, 2, 0, 0 },
-//                         { 0, 0, 0, 1, 6 },
-//                         { 0, 0, 0, 0, 2 },
-//                         { 0, 0, 0, 0, 0 } };
- 
-//         int cost[][] = { { 0, 1, 0, 0, 2 },
-//                          { 0, 0, 0, 3, 0 },
-//                          { 0, 0, 0, 0, 0 },
-//                          { 0, 0, 0, 0, 1 },
-//                          { 0, 0, 0, 0, 0 } };
- 
-//         int ret[] = flow.getMaxFlow(cap, cost, s, t);
- 
-//         System.out.println(ret[0] + " " + ret[1]);
-//     }
-// }
+MinCostMaxFlow::MinCostMaxFlow(
+    vector<vector<int>> cap, 
+    vector<vector<int>> cost
+) {
+    this->capacity = cap;
+    this->cost = cost;
+    this->num_students = cap.size();
+    this->num_classes = cap.at(0).size();
+
+    this->flow.assign(num_students, vector<int>(num_classes));
+
+    this->dad.assign(num_students, 0);
+    this->pi.assign(num_students, 0);
+}
 
 bool MinCostMaxFlow::pathExists(int src, int sink) {
 
     // Initialise found[] to false
-    fill(solution.begin(), solution.end(), false);
+    this->marked.assign(num_students, false);
 
     // Initialise the dist[] to INF
-    fill(dist.begin(), dist.end(), __INT_MAX__);
+    this->dist.assign(num_students + 1, __INT_MAX__/2);
 
     // Distance from the source node
     dist[src] = 0;
@@ -43,12 +32,12 @@ bool MinCostMaxFlow::pathExists(int src, int sink) {
     while (src != N) {
 
         int best = N;
-        solution[src] = true;
+        marked[src] = true;
 
         for (int k = 0; k < N; k++) {
 
             // If already found
-            if (solution[k])
+            if (marked[k])
                 continue;
 
             // Evaluate while flow
@@ -96,20 +85,10 @@ bool MinCostMaxFlow::pathExists(int src, int sink) {
         pi[k] = min(pi[k] + dist[k], __INT_MAX__);
 
     // Return the value obtained at sink
-    return solution[sink];
+    return marked[sink];
 }
- 
 
-
-vector<int>  MinCostMaxFlow::findMaxFlow(
-    vector<vector<int>> cap, 
-    vector<vector<int>> cost, 
-    int s, int t
-) {
-    this->capacity = cap;
-    this->cost = cost;
-    this->num_students = cap.size();
-    this->num_classes = cap.at(0).size();
+vector<int> MinCostMaxFlow::findMaxFlow(int s, int t) {
 
     int total_flow = 0; 
     int total_cost = 0;
@@ -124,7 +103,7 @@ vector<int>  MinCostMaxFlow::findMaxFlow(
             if(flow[x][dad[x]] != 0) {
                 amt = min(amt, flow[x][dad[x]]);
             } else {
-                amt = min(amt, cap[dad[x]][x] - flow[dad[x]][x]);
+                amt = min(amt, capacity[dad[x]][x] - flow[dad[x]][x]);
             }
         }
 
@@ -143,5 +122,5 @@ vector<int>  MinCostMaxFlow::findMaxFlow(
     }
 
     // Return pair total cost and sink
-    return { total_flow, total_cost };
+    return vector<int>({total_flow, total_cost});
 }

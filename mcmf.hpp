@@ -3,7 +3,8 @@ using namespace std;
 
 class MinCostMaxFlow {
     public:
-        vector<int> findMaxFlow(vector<vector<int>>, vector<vector<int>>, int s, int t);
+        MinCostMaxFlow(vector<vector<int>> cap, vector<vector<int>> cost);
+        vector<int> findMaxFlow(int s, int t);
 
     private:
         bool pathExists(int src, int sink);
@@ -12,7 +13,7 @@ class MinCostMaxFlow {
         vector<vector<int>> capacity;   // edge capacities
 
         vector<vector<int>> flow;       // edge flows
-        vector<bool> solution;  // found edges
+        vector<bool> marked;            // marked edges in search
 
         vector<int> dad;
         vector<int> dist;
