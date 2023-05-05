@@ -24,7 +24,7 @@ cap = [[0 for __ in range(1 + args.students + args.classes + 1)] for _ in range(
 for i in range(1, args.students):
     cap[0][i] = args.scapacity
 
-for i in range(args.students, args.students+args.classes):
+for i in range(args.students+1, args.students+args.classes+1):
     cap[i][-1] = args.ccapacity
 
 for s in range(args.students):
