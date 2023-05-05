@@ -19,24 +19,21 @@ args = parser.parse_args()
 # Rows are students columns are classes
 costs = [[0 for __ in range(1 + args.students + args.classes + 1)] for _ in range(1 + args.students + args.classes + 1)]
 cap = [[0 for __ in range(1 + args.students + args.classes + 1)] for _ in range(1 + args.students + args.classes + 1)]
+
 # Initialize the capacities of source and sink
 for i in range(1, args.students):
     cap[0][i] = args.scapacity
-    cap[i][0] = args.scapacity
 
 for i in range(args.students, args.students+args.classes):
-    cap[-1][i] = args.ccapacity
     cap[i][-1] = args.ccapacity
 
 for s in range(args.students):
     rankings = random.sample(range(args.classes), 5)
     for i, r in enumerate(rankings):
         costs[1+s][1+args.students+r] = i+1
-        costs[1+args.students+r][1+s] = i+1
         cap[1+s][1+args.students+r] = 1
-        cap[1+args.students+r][1+s] = 1
 
-with open(f"classes{args.classes}_students{args.students}_sc{args.scapacity}{args.ccapacity}.data", "w") as f:
+with open(f"classes{args.classes}_students{args.students}_s{args.scapacity}c{args.ccapacity}.data", "w") as f:
     lines = []
     for s in range(len(costs)):
         line = ""
