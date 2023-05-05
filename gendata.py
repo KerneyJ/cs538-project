@@ -5,11 +5,11 @@ import argparse
 parser = argparse.ArgumentParser(
                     prog='gendata.py',
                     description='Generate random data for combinatorics project')
-parser.add_argument('students', metavar='S', type=int,
+parser.add_argument('students', metavar='STUDENTS', type=int,
                     help='number of students')
-parser.add_argument('classes', metavar='CL', type=int,
+parser.add_argument('classes', metavar='CLASSES', type=int,
                     help='number of classes')
-parser.add_argument('capacity', metavar='CA', type=int,
+parser.add_argument('capacity', metavar='CAPACITY', type=int,
                     help='number of students a class can fit')
 args = parser.parse_args()
 
