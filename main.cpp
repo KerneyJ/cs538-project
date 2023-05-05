@@ -7,7 +7,6 @@
 #include <stdio.h>
 
 int main(int argc, char** argv){
-	;
 	if(argc < 2){
 		std::cout << "No datafile argument provided" << std::endl;
 		return 0;
