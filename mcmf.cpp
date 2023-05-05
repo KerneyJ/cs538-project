@@ -3,10 +3,10 @@
 
 MinCostMaxFlow::MinCostMaxFlow(
     vector<vector<int>> cap, 
-    vector<vector<int>> cost
+    vector<vector<int>> sat
 ) {
     this->capacity = cap;
-    this->cost = cost;
+    this->satisfaction = sat;
     this->num_students = cap.size();
     this->num_classes = cap.at(0).size();
 
@@ -45,9 +45,7 @@ bool MinCostMaxFlow::pathExists(int src, int sink) {
             if (flow[k][src] != 0) {
 
                 // Obtain the total value
-                int val
-                    = dist[src] + pi[src]
-                        - pi[k] - cost[k][src];
+                int val = dist[src] + pi[src] - pi[k] + satisfaction[k][src];
 
                 // If dist[k] is > minimum value
                 if (dist[k] > val) {
@@ -60,8 +58,7 @@ bool MinCostMaxFlow::pathExists(int src, int sink) {
 
             if (flow[src][k] < capacity[src][k]) {
 
-                int val = dist[src] + pi[src]
-                            - pi[k] + cost[src][k];
+                int val = dist[src] + pi[src] - pi[k] - satisfaction[src][k];
 
                 // If dist[k] is > minimum value
                 if (dist[k] > val) {
@@ -111,11 +108,10 @@ vector<int> MinCostMaxFlow::findMaxFlow(int s, int t) {
 
             if (flow[x][dad[x]] != 0) {
                 flow[x][dad[x]] -= amt;
-                total_cost -= amt * cost[x][dad[x]];
-            }
-            else {
+                total_cost += amt * satisfaction[x][dad[x]];
+            } else {
                 flow[dad[x]][x] += amt;
-                total_cost += amt * cost[dad[x]][x];
+                total_cost -= amt * satisfaction[dad[x]][x];
             }
         }
         total_flow += amt;

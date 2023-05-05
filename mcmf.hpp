@@ -8,12 +8,12 @@ class MinCostMaxFlow {
 
     private:
         bool pathExists(int src, int sink);
-        int num_students, num_classes;  // size of problem
-        vector<vector<int>> cost;       // edge costs
-        vector<vector<int>> capacity;   // edge capacities
+        int num_students, num_classes;      // size of problem
+        vector<vector<int>> satisfaction;   // edge costs
+        vector<vector<int>> capacity;       // edge capacities
 
-        vector<vector<int>> flow;       // edge flows
-        vector<bool> marked;            // marked edges in search
+        vector<vector<int>> flow;           // edge flows
+        vector<bool> marked;                // marked edges in search
 
         vector<int> dad;
         vector<int> dist;
