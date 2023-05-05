@@ -18,13 +18,9 @@ MinCostMaxFlow::MinCostMaxFlow(
 
 bool MinCostMaxFlow::pathExists(int src, int sink) {
 
-    // Initialise found[] to false
     this->marked.assign(num_students, false);
+    this->dist.assign(num_students + 1, INT32_MIN/2);
 
-    // Initialise the dist[] to INF
-    this->dist.assign(num_students + 1, __INT_MAX__/2);
-
-    // Distance from the source node
     dist[src] = 0;
     int N = max(num_classes, num_students);
 
@@ -36,53 +32,38 @@ bool MinCostMaxFlow::pathExists(int src, int sink) {
 
         for (int k = 0; k < N; k++) {
 
-            // If already found
             if (marked[k])
                 continue;
 
-            // Evaluate while flow
-            // is still in supply
             if (flow[k][src] != 0) {
+                int val = dist[src] + pi[src] - pi[k] - satisfaction[k][src];
 
-                // Obtain the total value
-                int val = dist[src] + pi[src] - pi[k] + satisfaction[k][src];
-
-                // If dist[k] is > minimum value
-                if (dist[k] > val) {
-
-                    // Update
+                if (val > dist[k]) {
                     dist[k] = val;
                     dad[k] = src;
                 }
             }
 
             if (flow[src][k] < capacity[src][k]) {
+                int val = dist[src] + pi[src] - pi[k] + satisfaction[src][k];
 
-                int val = dist[src] + pi[src] - pi[k] - satisfaction[src][k];
-
-                // If dist[k] is > minimum value
-                if (dist[k] > val) {
-
-                    // Update
+                if (val > dist[k]) {
                     dist[k] = val;
                     dad[k] = src;
                 }
             }
 
-            if (dist[k] < dist[best])
+            if (dist[k] > dist[best])
                 best = k;
         }
 
-        // Update src to best for
-        // next iteration
         src = best;
     }
 
     for (int k = 0; k < N; k++)
-        pi[k] = min(pi[k] + dist[k], __INT_MAX__);
+        pi[k] = max(pi[k] + dist[k], INT32_MIN);
 
-    // Return the value obtained at sink
-    return marked[sink];
+    return marked[sink]; // if we found a path to the sink
 }
 
 vector<int> MinCostMaxFlow::findMaxFlow(int s, int t) {
@@ -90,17 +71,14 @@ vector<int> MinCostMaxFlow::findMaxFlow(int s, int t) {
     int total_flow = 0; 
     int total_cost = 0;
 
-    // If a path exist from src to sink
     while (pathExists(s, t)) {
-
-        // Set the default amount
-        int amt = __INT_MAX__;
+        int amt = INT32_MIN;
 
         for (int x = t; x != s; x = dad[x]) {
             if(flow[x][dad[x]] != 0) {
-                amt = min(amt, flow[x][dad[x]]);
+                amt = max(amt, flow[x][dad[x]]);
             } else {
-                amt = min(amt, capacity[dad[x]][x] - flow[dad[x]][x]);
+                amt = max(amt, capacity[dad[x]][x] - flow[dad[x]][x]);
             }
         }
 
@@ -108,15 +86,14 @@ vector<int> MinCostMaxFlow::findMaxFlow(int s, int t) {
 
             if (flow[x][dad[x]] != 0) {
                 flow[x][dad[x]] -= amt;
-                total_cost += amt * satisfaction[x][dad[x]];
+                total_cost -= amt * satisfaction[x][dad[x]];
             } else {
                 flow[dad[x]][x] += amt;
-                total_cost -= amt * satisfaction[dad[x]][x];
+                total_cost += amt * satisfaction[dad[x]][x];
             }
         }
         total_flow += amt;
     }
 
-    // Return pair total cost and sink
     return vector<int>({total_flow, total_cost});
 }
