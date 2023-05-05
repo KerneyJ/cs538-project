@@ -21,7 +21,7 @@ costs = [[0 for __ in range(1 + args.students + args.classes + 1)] for _ in rang
 cap = [[0 for __ in range(1 + args.students + args.classes + 1)] for _ in range(1 + args.students + args.classes + 1)]
 
 # Initialize the capacities of source and sink
-for i in range(1, args.students):
+for i in range(1, args.students+1):
     cap[0][i] = args.scapacity
 
 for i in range(args.students+1, args.students+args.classes+1):
